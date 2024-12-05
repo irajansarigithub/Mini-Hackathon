@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mini Hackathon</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+ 
+</head>
+<body>
+  <div class="container-fluid">
+   
+    <div class="container" style="width: 350px; height: 610px;">
+        
+        <h4><em>Coranu</em></h4>
+  
+        <div class="form-container">
+           <input class="email" type="email" id="email" placeholder="Enter your Email " style="width: 270px;"> <br><br>
+           <input class="password" type="password" id="password" placeholder="Enter your password" style="width: 270px;"> <br> <br> <div class="button-container">
+            <button id="loginBtn">Login</button>
+          
+        </div> <br>  
+        
+        <button id="googleBtn"> <img src="./Images/google.png" alt="" width="60px" height="25px">Continue with google</button>
+      <br> 
+     <a href="#" id="sendVerification">Verify your E-mail</a><br>
+     <a href="#" id="resetPassword">ResetPassword</a><br><br>
+     <button id="deleteAccount">Delete Account</button><br> <br>
+     <p id="createAccountPrompt">If you don't have an account, <a href="./register.html">create one here</a>.</p>
+
+     
+     
+  
+          
+
+     
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> 
+  <script src="firebase.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
