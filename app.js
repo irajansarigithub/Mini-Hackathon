@@ -1,176 +1,106 @@
-import { auth,onAuthStateChanged,signInWithEmailAndPassword,
-    GoogleAuthProvider,signInWithPopup,sendEmailVerification,
-    sendPasswordResetEmail,deleteUser,provider
-   } from "./firebase.js";
-  
-   onAuthStateChanged(auth, (user) => {
-    if (user) {
-     
-      const uid = user.uid;
-      console.log("user Exist",user);
-      
-      
-    } else {
-     console.log("user signout");
-     
-     
-    }
-  });
- 
-  
-  let login = document.getElementById('loginBtn');
-  let loginBtn = () => {
-    let email = document.getElementById('email');
-    let password = document.getElementById('password');
-  
-    signInWithEmailAndPassword(auth, email.value, password.value)
-        .then((userCredential) => {
-            const user = userCredential.user;
-          
-           alert("login sucessfully!")
-      
-            email.value = "";
-            password.value = "";
-            localStorage.setItem(
-              "user",
-              JSON.stringify({ email: user.email, id: user.uid })
-            );
-  
-            setTimeout(function() {
-                window.location.href = 'home.html';
-            }, 3000);
-        })
-        .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            alert("Error logging in: " + errorMessage); 
-        });
-  };
-  
-         
-  
-  
-  
-  login.addEventListener('click', loginBtn);
-  
+import {
+  auth,
+  onAuthStateChanged,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+  sendEmailVerification,
+  sendPasswordResetEmail,
+  deleteUser
+} from "./firebase.js";
 
-  let googlelogin = document.getElementById('googleBtn')
-  let googleBtn =()=>{
-    signInWithPopup(auth, provider)
+
+const provider = new GoogleAuthProvider();
+
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    console.log("User exists:", user);
+  } else {
+    console.log("User signed out");
+  }
+});
+
+// Login Function
+let login = document.getElementById('loginBtn');
+login.addEventListener('click', () => {
+  let email = document.getElementById('email');
+  let password = document.getElementById('password');
+
+  signInWithEmailAndPassword(auth, email.value, password.value)
+    .then((userCredential) => {
+      const user = userCredential.user;
+      alert("Login successfully!");
+      localStorage.setItem("user", JSON.stringify({
+        email: user.email,
+        id: user.uid
+      }));
+      setTimeout(() => {
+        window.location.href = 'home.html';
+      }, 3000);
+    })
+    .catch((error) => {
+      alert("Error logging in: " + error.message);
+    });
+});
+
+// Google Login Function
+let googlelogin = document.getElementById('googleBtn');
+googlelogin.addEventListener('click', () => {
+  signInWithPopup(auth, provider)
     .then((result) => {
-      
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      const token = credential.accessToken;
       const user = result.user;
-      console.log(user);
-      console.log(token)
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          email: user.email,
-          id: user.uid,
-          name: user.displayName,
-          picture: user.photoURL,
-        })
-      );
+      localStorage.setItem("user", JSON.stringify({
+        email: user.email,
+        id: user.uid,
+        name: user.displayName,
+        picture: user.photoURL
+      }));
       window.location.href = 'home.html';
-      
-      
-      
-  
-   
-    }).catch((error) => {
-     
-      const errorCode = error.code;
-      const errorMessage = error.message;
-    
-     
-    console.log(errorMessage);
-    
-      const credential = GoogleAuthProvider.credentialFromError(error);
-    });
-  
-  }
-  googlelogin.addEventListener('click',googleBtn)
-  
-  
-  let emailVerify = document.getElementById('sendVerification')
-  let verifyBtn=()=>{
-  
-    sendEmailVerification(auth.currentUser)
-    .then(() => {
-     
-      alert("Verification email sent! check your inbox")
-     
     })
     .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.log(errorMessage);
-      
+      alert("Error signing in with Google: " + error.message);
     });
-    
-  
-  }
-  emailVerify.addEventListener('click',verifyBtn)
-  
-  
-  
-  
-  let Resetemail = document.getElementById('resetPassword')
-  let resetBtn=()=>{
-  
-    sendPasswordResetEmail(auth, email.value)
+});
+
+// Email Verification Function
+let emailVerify = document.getElementById('sendVerification');
+emailVerify.addEventListener('click', () => {
+  sendEmailVerification(auth.currentUser)
     .then(() => {
-      
-      alert("password reset email sent!")
+      alert("Verification email sent! Check your inbox.");
     })
     .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      
-      alert('try again')
-      
-      
+      alert("Error sending verification email: " + error.message);
     });
-  }
-  Resetemail.addEventListener('click',resetBtn)
-  
-  
-  let delteBtn = document.getElementById('deleteAccount')
-  let deleteAcc =()=>{
-  
-    const user = auth.currentUser;
-  
-    deleteUser(user).then(() => {
-      
-      alert("your account has been delete ")
-    }).catch((error) => {
-     
-      alert("no user in signin")
+});
+
+// Password Reset Function
+let Resetemail = document.getElementById('resetPassword');
+Resetemail.addEventListener('click', () => {
+  let email = document.getElementById('email');
+  sendPasswordResetEmail(auth, email.value)
+    .then(() => {
+      alert("Password reset email sent!");
+    })
+    .catch((error) => {
+      alert("Error: " + error.message);
     });
-  
-  
+});
+
+// Delete Account Function
+let delteBtn = document.getElementById('deleteAccount');
+delteBtn.addEventListener('click', () => {
+  const user = auth.currentUser;
+  if (user) {
+    deleteUser(user)
+      .then(() => {
+        alert("Your account has been deleted.");
+      })
+      .catch((error) => {
+        alert("Error deleting account: " + error.message);
+      });
+  } else {
+    alert("No user is currently signed in.");
   }
-  delteBtn.addEventListener('click',deleteAcc)
-  
-  
-  
-  
-  
-    
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+});
